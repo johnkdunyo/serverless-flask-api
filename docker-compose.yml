@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  dynamodb-local:
+    image: amazon/dynamodb-local
+    ports:
+      - "8000:8000"
+    networks:
+      - dynamodb-local
+
+  sam-app:
+    build: .
+    command: sam local start-api --parameter-overrides ExecEnv=local
+    depends_on:
+      - dynamodb-local
+    networks:
+      - dynamodb-local
+
+networks:
+  dynamodb-local:
+    external: true
